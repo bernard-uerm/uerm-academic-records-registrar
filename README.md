@@ -1,6 +1,6 @@
 # UERM Bingo (uerm-bingo)
 
-A UERM Bingo Application
+A UERM Academic Records Application
 
 ## Install the dependencies
 ```bash
