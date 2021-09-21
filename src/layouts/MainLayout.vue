@@ -14,7 +14,7 @@
 <style>
 
   .bg-image {
-    background-image: url(https://uerm.edu.ph/assets/3.0/js/style-switcher/images/bg_red_2012.jpg);
+    background-image: url("~assets/bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
   }

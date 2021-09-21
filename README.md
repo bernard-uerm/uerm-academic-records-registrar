@@ -1,4 +1,4 @@
-# UERM Bingo (uerm-bingo)
+# UERM ACADEMIC RECORDS
 
 A UERM Academic Records Application
 
