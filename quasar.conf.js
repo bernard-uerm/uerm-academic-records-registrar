@@ -20,8 +20,7 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
-      
-      'axios',
+      'axios'
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -46,7 +45,13 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+      env: {
+        // API_URL: 'http://localhost:3000/',
+        API_URL: 'https://apps.uerm.edu.ph:3443/',
+        API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
+        LOCAL_API_URL: 'http://localhost:3000/',
+        LOCAL_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3'
+      },
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
@@ -97,7 +102,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Cookies', 'LocalStorage']
     },
 
     // animations: 'all', // --- includes all animations

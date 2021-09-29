@@ -1,16 +1,16 @@
 <template>
-  <q-page v-bind:class="{ 'items-center': !isLoggedIn }">
-    <login v-if="!isLoggedIn"></login>
+  <q-page>
+    <dashboard></dashboard>
   </q-page>
 </template>
 
 <script>
-import Login from 'src/components/Login.vue';
+import Dashboard from 'src/components/Students/Dashboard.vue';
+import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex'
-
 export default {
-  components: { Login },
-  name: 'Index',
+  components: { Dashboard },
+  name: 'Students',
   data () {
     return {
       isLoggedIn: false
@@ -23,13 +23,8 @@ export default {
   },
   watch: {
     studentCredentials(val) {
-      try {
-        if (val.NAME) {
-          this.isLoggedIn = true
-          this.$router.push('/students')
-        }
-      } catch (error) {
-        console.log(error)
+      if (val) {
+        this.isLoggedIn = true
       }
     }
   },
