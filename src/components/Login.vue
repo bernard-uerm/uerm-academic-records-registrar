@@ -212,6 +212,7 @@ export default {
         mobileNumber: this.login.mobileNumber  !== null ? this.login.mobileNumber.trim() : null
       }
       const student = await this.$store.dispatch('students/validateStudent', studentInfo)
+      console.log(student)
       if (student.success !== null) {
         this.countDownTimer()
         this.message = null
@@ -231,9 +232,10 @@ export default {
       const validated = await this.$store.dispatch('students/validateOTP', this.login)
       if (validated.otpAuth === 'error') {
         this.message = 'OTP entered is not correct'
-      } else {
-        this.$router.push('/students')
       }
+      // else {
+      //   this.$router.push('/students')
+      // }
       this.loginLoading = false
     },
     countDownTimer () {

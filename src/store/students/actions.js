@@ -10,6 +10,7 @@ export async function validateStudent (state, studentInfo) {
     ).then((response) => response.json())
     if (response.length > 0) {
       if (studentInfo.checking) {
+        state.commit('setLoggedIn', true)
         state.commit('setStudentCredentials', response[0])
       } else {
         if (studentInfo.email !== null) {
@@ -30,6 +31,7 @@ export async function validateStudent (state, studentInfo) {
 
         const otp = await state.dispatch('generateOTP', studentInfo)
         if (otp.success !== undefined) {
+          state.commit('setLoggedIn', true)
           return {
             success: 'Successfully authenticated',
             error: null

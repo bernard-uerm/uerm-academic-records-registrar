@@ -6,7 +6,6 @@
 
 <script>
 import Dashboard from 'src/components/Students/Dashboard.vue';
-import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex'
 export default {
   components: { Dashboard },

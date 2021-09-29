@@ -82,36 +82,33 @@ export default {
     return {
       isLoggedIn: false,
       leftDrawerOpen: false,
-      essentialLinks: linksList
+      essentialLinks: linksList,
+      loading: null
     }
   },
   computed: {
     ...mapGetters({
-      studentCredentials: 'students/studentCredentials'
+      studentCredentials: 'students/studentCredentials',
+      studentIsLoggedIn: 'students/isLoggedIn'
     })
-  },
-  watch: {
-    studentCredentials(val) {
-      if (val) {
-        this.isLoggedIn = true
-      }
-    }
   },
   mounted () {
     this.checkAuthentication()
   },
   methods: {
     async checkAuthentication () {
+      this.loading = true
       if (this.$q.localStorage.has('studentLogin')) {
         let studentID = this.$q.localStorage.getItem('studentID')
         const studentInfo = {
           studentNo: studentID,
           checking: true
         }
-        await this.$store.dispatch('students/validateStudent', studentInfo)
-      } else {
-        this.$router.push('/')
+        const validatedStudent = await this.$store.dispatch('students/validateStudent', studentInfo)
+        console.log(this.studentIsLoggedIn)
+        this.isLoggedIn = this.studentIsLoggedIn
       }
+      this.loading = false
     },
     async logout () {
       await this.$store.dispatch('students/logout')
@@ -120,3 +117,12 @@ export default {
   }
 }
 </script>
+
+
+<style>
+.bg-image {
+  background-image: url("~assets/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>

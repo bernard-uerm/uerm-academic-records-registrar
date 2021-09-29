@@ -5,3 +5,7 @@ export function setOTP (state, otpStatus) {
 export function setStudentCredentials (state, studentInfo) {
   state.studentCredentials = studentInfo
 }
+
+export function setLoggedIn (state, status) {
+  state.isLoggedIn = status
+}
