@@ -291,7 +291,7 @@
                     :to="'/'"
                     icon="undo"
                     :class="`full-width full-height text-white`"
-                    label="GO BACK HOME"
+                    label="GO BACK TO LOGIN"
                   />
                 </q-card-section>
               </q-form>
