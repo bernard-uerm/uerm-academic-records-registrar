@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-image">
-    <q-header elevated v-if="isLoggedIn" style="background:linear-gradient(to right, #26A69A , #1976D2)">
+    <q-header elevated v-if="studentIsLoggedIn" style="background:linear-gradient(to right, #26A69A , #1976D2)">
       <q-toolbar>
         <q-toolbar-title class="text-right text-uppercase">
           UERM Student Portal
@@ -22,7 +22,7 @@
       show-if-above
       bordered
       class=""
-      v-if="isLoggedIn"
+      v-if="studentIsLoggedIn"
       side="right"
     >
       <q-list>
