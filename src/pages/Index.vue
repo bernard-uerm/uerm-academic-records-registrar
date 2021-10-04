@@ -1,15 +1,18 @@
 <template>
-  <q-page v-bind:class="{ 'items-center': !isLoggedIn }">
-    <login v-if="!isLoggedIn"></login>
+  <q-page class="flex flex-center">
+  <!-- <q-page
+    class="row justify-center items-center q-ma-lg"
+  > -->
+    <Main v-if="!isLoggedIn"></Main>
   </q-page>
 </template>
 
 <script>
-import Login from 'src/components/Login.vue';
+import Main from 'src/components/Main.vue';
 import { mapGetters } from 'vuex'
 
 export default {
-  components: { Login },
+  components: { Main },
   name: 'Index',
   data () {
     return {

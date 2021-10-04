@@ -8,10 +8,10 @@ const routes = [
     ]
   },
   {
-    path: '/register',
+    path: '/academic-records-application',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Register.vue') }
+      { path: '', component: () => import('pages/AcademicRecordsApplication.vue') }
     ]
   },
   {

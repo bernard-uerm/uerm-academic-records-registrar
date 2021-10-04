@@ -50,6 +50,7 @@ module.exports = function (/* ctx */) {
         API_URL: 'https://apps.uerm.edu.ph:3443/',
         API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
         LOCAL_API_URL: 'http://localhost:3000/',
+        LOCAL_PC_API_URL: 'http://192.168.43.64:3000/',
         LOCAL_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3'
       },
       // transpile: false,

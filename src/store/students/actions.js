@@ -1,4 +1,5 @@
 import { LocalStorage } from 'quasar'
+import axios from 'axios'
 export async function validateStudent (state, studentInfo) {
   try {
     const response = await fetch(
@@ -239,6 +240,24 @@ export async function sendTextMessage (state, message) {
     console.log(error)
     return error
   }
+}
+
+export async function registerUser (state, userData) {
+  axios({
+    method: 'post',
+    url: `${this.state.students.localPCAPIURL}students/register-student-portal`,
+    data: userData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }).then((response) => {
+    console.log('yeah')
+    return response
+  })
+  .catch((error) => {
+    console.log('oh no!')
+    return error
+  })
 }
 
 

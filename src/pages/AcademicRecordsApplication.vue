@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card square style="width:1000px;max-width:1200px;background:linear-gradient(to right, #1976D2 , #26A69A)" class="q-ma-md shadow-15">
+    <q-card square style="width:1230px;max-width:1500px;background:linear-gradient(to right, #1976D2 , #26A69A)" class="q-ma-md shadow-15">
       <q-card-section>
         <div class="row q-col-gutter-md">
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
@@ -73,7 +73,7 @@
                   >
                     <q-step
                       :name="1"
-                      title="Basic Information"
+                      title="BASIC INFORMATION"
                       icon="settings"
                       :done="step > 1"
                       :header-nav="step > 1"
@@ -188,7 +188,7 @@
 
                     <q-step
                       :name="2"
-                      title="Academic Information"
+                      title="ACADEMIC INFORMATION"
                       icon="create_new_folder"
                       :done="step > 2"
                       :header-nav="step > 2"
@@ -208,9 +208,10 @@
                                 v-model="registrationInfo.currentlyEnrolled"
                                 checked-icon="check"
                                 label="Currently Enrolled?"
-                                color="green"
+                                color="secondary"
                                 unchecked-icon="clear"
                                 class="q-mt-md q-pl-none"
+                                size="xl"
                               />
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" v-if="!registrationInfo.currentlyEnrolled">
@@ -246,7 +247,7 @@
                                 type="text"
                                 label="Student #"
                                 color="secondary"
-                                hint="If you can't remember it leave it blank."
+                                hint="Student # is not required"
                               >
                                 <template v-slot:prepend>
                                   <q-icon name="person" />
@@ -344,16 +345,118 @@
                       </q-stepper-navigation>
                     </q-step>
 
-
                     <q-step
                       :name="3"
-                      title="Document Request"
+                      title="DOCUMENT REQUEST"
                       icon="create_new_folder"
                       :done="step > 3"
                       :header-nav="step > 3"
                       done-color="secondary"
                       active-color="primary"
                     >
+                      <q-card>
+                        <q-card-section class="bg-secondary text-overline text-white" align="center">
+                          REQUEST FOR ACADEMIC RECORDS
+                        </q-card-section>
+                        <q-card-section align="right">
+                          <q-btn color="secondary" @click="addDocumentRequest" icon="add_circle_outline" label="Add Academic Record Document" />
+                        </q-card-section>
+                        <q-card-section>
+                          <div class="" 
+                            v-for="(docRequest, index) in academicDocumentRequest"
+                            :key="index"
+                          >
+                            <div v-if="index%2">
+                              <q-card class="q-mb-sm">
+                                <q-card-section class="bg-secondary text-white text-overline" align="center">
+                                  DOCUMENT #{{ index+1 }}
+                                </q-card-section>
+                                <q-card-section>
+                                  <div class="row justify-center q-col-gutter-md">
+                                    <div class="col-lg-5 flex flex-center">
+                                      <q-select
+                                        v-model="docRequest.document"
+                                        :options="academicDocument"
+                                        label="Document"
+                                        hint=""
+                                        color="secondary"
+                                      />
+                                    </div>
+                                    <div class="col-lg-5 flex flex-center">
+                                      <q-input
+                                        v-model="docRequest.numberOfCopies"
+                                        type="number"
+                                        label="Number of Copies"
+                                        color="secondary"
+                                        :rules="[ val => val && val.length > 0 || 'Please enter Number of Copies']"
+                                      >
+                                        <template v-slot:prepend>
+                                          <q-icon name="person" />
+                                        </template>
+                                        <template v-slot:append>
+                                          <q-icon name="close" @click="docRequest.numberOfCopies = ''" class="cursor-pointer" />
+                                        </template>
+                                      </q-input>
+                                    </div>
+                                    <div class="col-lg-2 flex flex-center">
+                                      <q-btn color="negative" @click="removeDocuments(index)" icon="delete_outline" />
+                                    </div>
+                                  </div>
+                                </q-card-section>
+                              </q-card>
+                            </div>
+                            <div v-else>
+                              <q-card class="q-mb-sm">
+                                <q-card-section class="bg-primary text-white text-overline" align="center">
+                                  DOCUMENT #{{ index+1 }}
+                                </q-card-section>
+                                <q-card-section>
+                                  <div class="row justify-center q-col-gutter-md">
+                                    <div class="col-lg-5 flex flex-center">
+                                      <q-select
+                                        v-model="docRequest.document"
+                                        :options="academicDocument"
+                                        label="Document"
+                                        hint=""
+                                        color="secondary"
+                                      />
+                                    </div>
+                                    <div class="col-lg-5 flex flex-center">
+                                      <q-input
+                                        square
+                                        v-model="docRequest.numberOfCopies"
+                                        type="number"
+                                        label="Number of Copies"
+                                        color="secondary"
+                                        :rules="[ val => val && val.length > 0 || 'Please enter Number of Copies']"
+                                      >
+                                        <template v-slot:prepend>
+                                          <q-icon name="person" />
+                                        </template>
+                                        <template v-slot:append>
+                                          <q-icon name="close" @click="docRequest.numberOfCopies = ''" class="cursor-pointer" />
+                                        </template>
+                                      </q-input>
+                                    </div>
+                                    <div class="col-lg-2 flex flex-center">
+                                      <q-btn color="negative" @click="removeDocuments(index)" icon="delete_outline" />
+                                    </div>
+                                  </div>
+                                </q-card-section>
+                              </q-card>
+                            </div>
+                          </div>
+                        </q-card-section>
+                      </q-card>
+                      <q-separator class="q-ma-md"></q-separator> 
+                      <q-card>
+                        <q-card-section class="bg-secondary text-overline text-white" align="center">
+                          ABOVE DOCUMENT/S IS/ARE REQUIRED FOR:
+                        </q-card-section>
+                        <q-card-section>
+                          
+                        </q-card-section>
+                      </q-card>
                       <q-stepper-navigation align="center">
                         <q-btn @click="forwardStep(4)" color="secondary" label="Continue" />
                         <q-btn flat @click="backwardStep(2)" color="secondary" label="Back" class="q-ml-sm" />
@@ -362,7 +465,7 @@
 
                     <q-step
                       :name="4"
-                      title="Proof"
+                      title="PROOF OF DOCUMENTS"
                       icon="create_new_folder"
                       :done="step > 4"
                       :header-nav="step > 4"
@@ -407,13 +510,21 @@
 
                     <q-step
                       :name="5"
-                      title="Register"
+                      title="TERMS AND CONDITIONS"
                       icon="save"
                       :header-nav="step > 5"
                       done-color="secondary"
                       active-color="primary"
                     >
-                      DISCLAIMER
+                      <div class="text-body1">
+                        <q-checkbox
+                          v-model="checkTerms"
+                          :label="terms"
+                          size="xl"
+                          color="secondary"
+                        >
+                        </q-checkbox>
+                      </div>
                       <q-stepper-navigation align="center">
                         <q-btn color="secondary" type="submit" @click="done3 = true" label="Submit" />
                         <q-btn flat @click="backwardStep(4)" color="secondary" label="Back" class="q-ml-sm" />
@@ -447,8 +558,37 @@ var term = [
   '3RD',
   'SUMMER'
 ]
+
+var reasonForRequest = [
+  'SCHOLARSHIP',
+  'RE-ADMISSION',
+  'TRANSFER TO OTHER SCHOOL',
+  'BOARD EXAMINATION',
+  'EMPLOYMENT',
+  'FURTHER STUDIES',
+  'REFERENCE',
+  'OTHERS'
+]
+
+var academicRecords = [
+  'OFFICIAL TRANSCRIPT OF RECORDS',
+  'CERTIFICATE OF TRANSFER CREDENTIAL',
+  'ORIGINAL DIPLOMA (ISSUED ONLY ONCE)',
+  'CERTIFIED TRUE COPY - TRANSCRIPT OF RECORDS',
+  'CERTIFIED TRUE COPY - DIPLOMA',
+  'CERTIFICATION - GRADUATION',
+  'CERTIFICATION - MEDIUM OF INSTRUCTION',
+  'CERTIFICATION - ENROLLMENT/ATTENDANCE',
+  'CERTIFICATION - NON-ISSUANCE OF SPECIAL ORDER NUMBER',
+  'CERTIFICATION - GRADES',
+  'CERTIFICATION - GENERAL WEIGHTED AVERAGE',
+  'CERTIFICATION - COURSE / SUBJECT DESCRIPTION',
+  'CERTIFICATION, AUTHENTICATION AND VERIFICATION - DEPARTMENT OF FOREIGN AFFAIRS (DFA)',
+  'CERTIFICATION, AUTHENTICATION AND VERIFICATION - COMMISION ON HIGHER EDUCATION (CHED)',
+  'OTHERS'
+]
 export default {
-  name: 'Register',
+  name: 'AcademicRecordsApplication',
   data () {
     return {
       step: 1,
@@ -456,6 +596,16 @@ export default {
       schoolYearTo: null,
       fromTerm: term,
       toTerm: term,
+      reason: reasonForRequest,
+      academicDocument: academicRecords,
+      checkTerms: false,
+      terms: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      academicDocumentRequest: [
+        {
+          document: 'Select Document',
+          numberOfCopies: null
+        }
+      ],
       registrationInfo: {
         firstname: 'Bernard',
         middlename: 'Tiaga',
@@ -471,7 +621,11 @@ export default {
         periodEnrolledfromTerm: null,
         periodEnrolledToSchoolYear: null,
         periodEnrolledToTerm: null,
-        fileProof: null
+        fileProof: null,
+        reasonForRequest: null,
+        otherReasons: null,
+        academicDocument: null,
+        otherDocuments: null
       }
     }
   },
@@ -494,6 +648,19 @@ export default {
     this.formatBatch()
   },
   methods: {
+    addDocumentRequest () {
+      var newDocument = {
+        document: 'Select Document',
+        numberOfCopies: null
+      }
+
+      this.academicDocumentRequest.push(newDocument)
+    },
+    removeDocuments (index) {
+      const shallowCopyArray = Array.from(this.academicDocumentRequest)
+      shallowCopyArray.splice(index, 1)
+      this.academicDocumentRequest = shallowCopyArray
+    },
     async registerUser (evt) {
       const formData = new FormData(evt.target)
       for (const [ name, value ] of formData.entries()) {
@@ -538,3 +705,21 @@ export default {
   }
 }
 </script>
+
+<style>
+  .card-border-primary {
+    border-top: none;
+    border-bottom: none;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.12);
+    border-left-color: #1976d2 !important;
+    border-right-color: #1976d2 !important;
+  }
+
+  .card-border-secondary {
+    border-style: solid;
+    border-color: rgba(0,0,0,0.12);
+    border-left-color: #26a69a  !important;
+    border-right-color: #26a69a  !important;
+  }
+</style>
