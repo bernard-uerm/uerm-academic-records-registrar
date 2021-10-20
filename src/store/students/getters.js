@@ -9,3 +9,7 @@ export function studentCredentials (state) {
 export function isLoggedIn (state) {
   return state.isLoggedIn
 }
+
+export function transactionDetails (state) {
+  return state.transactionDetails
+}

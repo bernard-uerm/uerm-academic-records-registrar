@@ -9,3 +9,8 @@ export function setStudentCredentials (state, studentInfo) {
 export function setLoggedIn (state, status) {
   state.isLoggedIn = status
 }
+
+export function setTransactionDetails (state, transactionDetails) {
+  console.log(transactionDetails)
+  state.transactionDetails = transactionDetails
+}

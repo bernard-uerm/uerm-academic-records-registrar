@@ -48,10 +48,13 @@ module.exports = function (/* ctx */) {
       env: {
         API_URL: 'http://localhost:3000/',
         // API_URL: 'https://apps.uerm.edu.ph:3443/',
+        SECONDARY_API_URL: 'https://apps.uerm.edu.ph:3443/',
         API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
         LOCAL_API_URL: 'http://localhost:3000/',
         LOCAL_PC_API_URL: 'http://192.168.43.64:3000/',
-        LOCAL_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3'
+        LOCAL_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
+        API_USERNAME: 'academic_records',
+        API_PASSWORD: '12345'
       },
       // transpile: false,
 
@@ -187,7 +190,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'uerm-bingo'
+        appId: 'uerm-academic-records-registrar'
       },
 
       // More info: https://v1.quasar.dev/quasar-cli/developing-electron-apps/node-integration

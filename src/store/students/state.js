@@ -7,6 +7,7 @@ export default function () {
     localAPIKey: process.env.LOCAL_API_URL,
     otpStatus: false,
     studentCredentials: null,
-    isLoggedIn: null
+    isLoggedIn: null,
+    transactionDetails: []
   }
 }

@@ -28,7 +28,7 @@
               </template>
             </q-input>
             <div class="q-ma-md text-center">
-              <q-chip color="secondary" text-color="white" icon="note_add" clickable @click="requestRecord">
+              <q-chip color="secondary" size="18px" text-color="white" icon="school" clickable @click="requestRecord">
                 REQUEST FOR UERM ACADEMIC RECORDS
               </q-chip>
             </div>

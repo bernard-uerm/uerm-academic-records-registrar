@@ -12,57 +12,6 @@
                 <q-card-section align="center" class="text-h5 text-weight-thin text-white bg-secondary">
                   UERM ACADEMIC RECORDS APPLICATION
                 </q-card-section>
-                <!-- <q-card-section>
-                  <div class="row q-mb-lg">
-                    <div class="col-6">
-                      <q-input
-                        square
-                        v-model="registrationInfo.lastname"
-                        type="text"
-                        label="Lastname"
-                        class="q-mt-md"
-                        color="secondary"
-                        :rules="[ val => val && val.length > 0 || 'Please enter your Lastname']"
-                      >
-                        <template v-slot:prepend>
-                          <q-icon name="person" />
-                        </template>
-                        <template v-slot:append>
-                          <q-icon name="close" @click="registrationInfo.lastname = ''" class="cursor-pointer" />
-                        </template>
-                      </q-input>
-                      <q-input
-                        square
-                        v-model="registrationInfo.firstname"
-                        type="text"
-                        label="Firstname"
-                        color="secondary"
-                        :rules="[ val => val && val.length > 0 || 'Please enter your Firstname']"
-                      >
-                        <template v-slot:prepend>
-                          <q-icon name="person" />
-                        </template>
-                        <template v-slot:append>
-                          <q-icon name="close" @click="registrationInfo.firstname = ''" class="cursor-pointer" />
-                        </template>
-                      </q-input>
-                      <q-input
-                        square
-                        v-model="registrationInfo.middlename"
-                        type="text"
-                        label="Middlename"
-                        color="secondary"
-                      >
-                        <template v-slot:prepend>
-                          <q-icon name="person" />
-                        </template>
-                        <template v-slot:append>
-                          <q-icon name="close" @click="registrationInfo.middlename = ''" class="cursor-pointer" />
-                        </template>
-                      </q-input>
-                    </div>
-                  </div>
-                </q-card-section> -->
                 <q-card-section>
                   <q-stepper
                     v-model="step"
@@ -80,6 +29,49 @@
                       done-color="secondary"
                       active-color="primary"
                     >
+                      <q-card class="q-my-md">
+                        <q-card-section class="bg-secondary text-overline text-white" align="center">
+                          PREVIOUS ACADEMIC RECORDS REQUEST
+                        </q-card-section>
+                        <q-card-section>
+                          <div class="row justify-between q-col-gutter-lg">
+                            <div class="" v-bind:class="{ 'col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center': !registrationInfo.haveRecord }">
+                              <q-toggle
+                                v-model="registrationInfo.haveRecord"
+                                checked-icon="check"
+                                label="Do you have previous Academic Records Request?"
+                                color="secondary"
+                                unchecked-icon="clear"
+                                class="q-mt-md q-pl-none"
+                                size="xl"
+                              />
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" v-if="registrationInfo.haveRecord">
+                              <q-input
+                                square
+                                v-model="registrationInfo.referenceNumber"
+                                type="text"
+                                label="Reference Number"
+                                color="secondary"
+                                :rules="[ val => val && val.length > 0 || 'Please enter your Reference Number']"
+                                @focusout="searchReferenceID(registrationInfo.referenceNumber)"
+                              >
+                                <template v-slot:prepend>
+                                  <q-icon name="person" />
+                                </template>
+                                <template v-slot:append>
+                                  <q-icon name="close" @click="registrationInfo.referenceNumber = ''" class="cursor-pointer" />
+                                </template>
+                              </q-input>
+                            </div>
+                            <div class="col-12" v-if="this.referenceNumberMessage !== null">
+                              <q-banner inline-actions class="text-white bg-red">
+                                {{ this.referenceNumberMessage }}
+                              </q-banner>
+                            </div>
+                          </div>
+                        </q-card-section>
+                      </q-card>
                       <q-card>
                         <q-card-section class="bg-secondary" align="center">
                           <div class="text-overline text-white">
@@ -359,7 +351,16 @@
                           REQUEST FOR ACADEMIC RECORDS
                         </q-card-section>
                         <q-card-section align="right">
-                          <q-btn color="secondary" @click="addDocumentRequest" icon="add_circle_outline" label="Add Academic Record Document" />
+                          <q-btn
+                            color="secondary"
+                            @click="addDocumentRequest"
+                            icon="add_circle_outline"
+                            label="Add Academic Record Document"
+                          >
+                            <q-badge color="orange" floating>
+                              {{ academicDocumentRequest.length }}
+                            </q-badge>
+                          </q-btn>
                         </q-card-section>
                         <q-card-section>
                           <div class="" 
@@ -380,6 +381,7 @@
                                         label="Document"
                                         hint=""
                                         color="secondary"
+                                        :rules="[ val => val && val.length > 0 || 'Please enter Number of Copies']"
                                       />
                                     </div>
                                     <div class="col-lg-5 flex flex-center">
@@ -410,18 +412,20 @@
                                 <q-card-section class="bg-primary text-white text-overline" align="center">
                                   DOCUMENT #{{ index+1 }}
                                 </q-card-section>
-                                <q-card-section>
+                                <q-card-section align="center">
                                   <div class="row justify-center q-col-gutter-md">
-                                    <div class="col-lg-5 flex flex-center">
+                                    <div class="col-lg-7 flex flex-center">
                                       <q-select
                                         v-model="docRequest.document"
                                         :options="academicDocument"
                                         label="Document"
-                                        hint=""
+                                        hint="Select your requesting document"
                                         color="secondary"
+                                        style="width:500px;"
+                                        :rules="[ val => val && val.length > 0 || 'Please select document from the list']"
                                       />
                                     </div>
-                                    <div class="col-lg-5 flex flex-center">
+                                    <div class="col-lg-3 flex flex-center">
                                       <q-input
                                         square
                                         v-model="docRequest.numberOfCopies"
@@ -454,7 +458,37 @@
                           ABOVE DOCUMENT/S IS/ARE REQUIRED FOR:
                         </q-card-section>
                         <q-card-section>
-                          
+                          <q-card-section align="center">
+                            <div class="row justify-between q-col-gutter-lg">
+                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" v-bind:class="{ 'col-lg-6': registrationInfo.reasonForRequest === 'OTHERS' }">
+                                <q-select
+                                  v-model="registrationInfo.reasonForRequest"
+                                  :options="reason"
+                                  label="Period Enrolled S.Y. From"
+                                  hint="Select reason for requesting document(s)"
+                                  color="secondary"
+                                  :rules="[ val => val && val.length > 0 || 'Please enter reason for the request']"
+                                />
+                              </div>
+                              <div class="col-12" v-if="registrationInfo.reasonForRequest === 'OTHERS'">
+                                <q-input
+                                  autogrow
+                                  square
+                                  v-model="registrationInfo.otherReasons"
+                                  label="Other Reason for the Request"
+                                  color="secondary"
+                                  :rules="[ val => val && val.length > 0 || 'Please enter other reason for the request']"
+                                >
+                                  <template v-slot:prepend>
+                                    <q-icon name="person" />
+                                  </template>
+                                  <template v-slot:append>
+                                    <q-icon name="close" @click="registrationInfo.otherReasons = ''" class="cursor-pointer" />
+                                  </template>
+                                </q-input>
+                              </div>
+                            </div>
+                          </q-card-section>
                         </q-card-section>
                       </q-card>
                       <q-stepper-navigation align="center">
@@ -484,9 +518,9 @@
                                 v-model="registrationInfo.fileProof"
                                 label="File Proof"
                                 color="secondary"
-                                accept=".jpg, image/*, .pdf"
+                                accept=".pdf"
+                                hint="Upload a PDF File containing proofs that you are a Student of UERM"
                                 :rules="[ val => val !== '' && val !== null || 'Please upload a proof that you are a former or a current student']"
-                                hint=""
                               >
                                 <template v-slot:prepend>
                                   <q-icon name="person" />
@@ -587,6 +621,7 @@ var academicRecords = [
   'CERTIFICATION, AUTHENTICATION AND VERIFICATION - COMMISION ON HIGHER EDUCATION (CHED)',
   'OTHERS'
 ]
+import { mapGetters } from 'vuex'
 export default {
   name: 'AcademicRecordsApplication',
   data () {
@@ -602,17 +637,26 @@ export default {
       terms: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       academicDocumentRequest: [
         {
-          document: 'Select Document',
+          document: null,
           numberOfCopies: null
         }
       ],
+      referenceNumberMessage: null,
       registrationInfo: {
-        firstname: 'Bernard',
-        middlename: 'Tiaga',
-        lastname: 'Gresola',
-        address: 'Quezon City',
-        emailAddress: 'gresolabernard@gmail.com',
-        mobileNumber: '09053254071',
+        haveRecord: false,
+        referenceNumber: null,
+        // firstname: 'Bernard',
+        // middlename: 'Tiaga',
+        // lastname: 'Gresola',
+        // address: 'Quezon City',
+        // emailAddress: 'gresolabernard@gmail.com',
+        // mobileNumber: '09053254071',
+        firstname: null,
+        middlename: null,
+        lastname: null,
+        address: null,
+        emailAddress: null,
+        mobileNumber: null,
         studentNumber: null,
         currentlyEnrolled: false,
         degreeProgram: null,
@@ -632,7 +676,7 @@ export default {
   watch: {
     registrationInfo: {
       async handler (val) {
-        console.log(val)
+        // console.log(val)
       },
       deep: true
     },
@@ -643,6 +687,11 @@ export default {
     //     console.log(val)
     //   })
     // }
+  },
+  computed: {
+    ...mapGetters({
+      transactionDetails: 'students/transactionDetails'
+    })
   },
   mounted () {
     this.formatBatch()
@@ -671,8 +720,8 @@ export default {
       }
 
       formData.append('lastname', this.registrationInfo.lastname)
-      
-      await this.$store.dispatch('students/registerUser', formData)
+      console.log(formData)
+      // await this.$store.dispatch('students/registerUser', formData)
     },
     isValidEmail (val) {
       const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/
@@ -684,11 +733,12 @@ export default {
           return
         } else {
           this.step = step
+          console.log(this.academicDocumentRequest[0].document)
         }
       })
     },
     formatBatch () {
-      var currentYear = new Date().getFullYear()
+      var currentYear = new Date().getFullYear() + 1
       var batch = []
       for (var yearIndex = 1950; yearIndex <= currentYear; yearIndex++) {
         batch.push(yearIndex)
@@ -699,8 +749,47 @@ export default {
     backwardStep (step) {
       this.step = step
     },
-    forgotPassword () {
-      console.log(forgotPassword)
+    async searchReferenceID (referenceID) {
+      const validate = await this.authenticate()
+      if (validate) {
+        var reference = {
+          referenceID: referenceID
+        }
+        await this.$store.dispatch('students/transactions', reference)
+        if (this.transactionDetails.length > 0) {
+          this.referenceNumberMessage = null
+          this.registrationInfo.firstname = this.transactionDetails[0].FirstName
+          this.registrationInfo.middlename = this.transactionDetails[0].MiddleName
+          this.registrationInfo.lastname = this.transactionDetails[0].LastName
+          this.registrationInfo.address = this.transactionDetails[0].Address
+          this.registrationInfo.emailAddress = this.transactionDetails[0].Email
+          this.registrationInfo.mobileNumber = this.transactionDetails[0].ContactNumber
+        } else {
+          this.referenceNumberMessage = 'Sorry, Reference Number not found. Please enter your personal details below.'
+          this.registrationInfo.firstname = null
+          this.registrationInfo.middlename = null
+          this.registrationInfo.lastname = null
+          this.registrationInfo.address = null
+          this.registrationInfo.emailAddress = null
+          this.registrationInfo.mobileNumber = null
+        }
+        
+      }
+    },
+    async authenticate () {
+      const checkAuth = await this.$store.dispatch('students/checkAuthentication')
+      if (!checkAuth) {
+        await this.$store.dispatch('students/authenticateAPI')
+        return { validated: true }
+      } else {
+        const validate = await this.$store.dispatch('students/validateToken')
+        if (validate.message === 'error') {
+          await this.$store.dispatch('students/authenticateAPI')
+          return { validated: true }
+        } else {
+          return { validated: true }
+        }
+      }
     }
   }
 }

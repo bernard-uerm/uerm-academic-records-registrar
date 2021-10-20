@@ -1,8 +1,8 @@
 {
-  "name": "uerm-academic-records",
+  "name": "uerm-academic-records-registrar",
   "version": "0.0.1",
   "description": "A UERM Academe Application",
-  "productName": "UERM Academic Records",
+  "productName": "UERM Academic Records - Registrar",
   "author": "Bernard Gresola <btgresola@uerm.edu.ph>",
   "private": true,
   "scripts": {
