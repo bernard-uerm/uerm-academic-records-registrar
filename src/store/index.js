@@ -2,7 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // import example from './module-example'
-import students from './students'
+import employees from './employees'
+import records from './academic-records'
+import auth from './authentication'
 
 Vue.use(Vuex)
 
@@ -19,7 +21,9 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       // example
-      students
+      employees,
+      records,
+      auth
     },
 
     // enable strict mode (adds overhead!)

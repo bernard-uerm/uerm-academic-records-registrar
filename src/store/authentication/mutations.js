@@ -1,3 +1,7 @@
+export function setEmployeeInformation (state, employeeInformation) {
+  state.employeeInformation = employeeInformation
+}
+
 export function setOTP (state, otpStatus) {
   state.otpStatus = otpStatus
 }

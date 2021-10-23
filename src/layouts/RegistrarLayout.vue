@@ -1,9 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-image">
-    <q-header elevated v-if="studentIsLoggedIn" style="background:linear-gradient(to right, #26A69A , #1976D2)">
+    <q-header elevated style="background:linear-gradient(to right, #26A69A , #1976D2)">
       <q-toolbar>
         <q-toolbar-title class="text-right text-uppercase">
-          UERM Student Portal
+          UERM Registrar
         </q-toolbar-title>
         <q-btn
           flat
@@ -22,7 +22,6 @@
       show-if-above
       bordered
       class=""
-      v-if="studentIsLoggedIn"
       side="right"
     >
       <q-list>
@@ -31,20 +30,25 @@
           class="text-grey-8"
         >
           <q-card>
-            <q-card-section align="center">
-              {{ studentCredentials.NAME }}
+            <q-card-section align="center" class="text-overline">
+              {{ this.loginInfo.name }}
+              <q-separator></q-separator>
+              <q-chip color="primary" size="sm" text-color="white" icon="person">
+                {{this.loginInfo.position === null ? '' : this.loginInfo.position.toUpperCase() }}
+              </q-chip>
             </q-card-section>
+            <q-separator></q-separator>
+            <EssentialLink
+              v-for="link in essentialLinks"
+              :key="link.title"
+              v-bind="link"
+            />
+            <q-separator></q-separator>
             <q-card-section align="center">
               <q-btn color="primary" @click="logout" icon="logout" label="log out"></q-btn>
             </q-card-section>
           </q-card>
         </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
       </q-list>
     </q-drawer>
 
@@ -64,12 +68,12 @@ const linksList = [
     icon: 'fa fa-chart-area',
     link: 'https://quasar.dev'
   },
-  {
-    title: 'Clearance',
-    caption: 'Student Clearance',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
+  // {
+  //   title: 'Clearance',
+  //   caption: 'Student Clearance',
+  //   icon: 'school',
+  //   link: 'https://quasar.dev'
+  // },
 ];
 
 import { mapGetters } from 'vuex'
@@ -83,13 +87,16 @@ export default {
       isLoggedIn: false,
       leftDrawerOpen: false,
       essentialLinks: linksList,
-      loading: null
+      loading: null,
+      loginInfo: {
+        name: null,
+        position: null
+      }
     }
   },
   computed: {
     ...mapGetters({
-      studentCredentials: 'students/studentCredentials',
-      studentIsLoggedIn: 'students/isLoggedIn'
+      employeeInformation: 'employees/employeeInformation'
     })
   },
   mounted () {
@@ -98,20 +105,23 @@ export default {
   methods: {
     async checkAuthentication () {
       this.loading = true
-      if (this.$q.localStorage.has('studentLogin')) {
-        let studentID = this.$q.localStorage.getItem('studentID')
+      console.log(this.$q.cookies.has('isEmployeeLogin'))
+      if (this.$q.cookies.has('isEmployeeLogin')) {
+        let employeeID = this.$q.cookies.get('employee_code')
         const studentInfo = {
-          studentNo: studentID,
+          username: employeeID,
           checking: true
         }
-        const validatedStudent = await this.$store.dispatch('students/validateStudent', studentInfo)
-        console.log(this.studentIsLoggedIn)
-        this.isLoggedIn = this.studentIsLoggedIn
+        const validatedStudent = await this.$store.dispatch('employees/loginEmployee', studentInfo)
+        this.loginInfo.name = this.employeeInformation.fullName
+        this.loginInfo.position = this.employeeInformation.position
+      } else {
+        this.$router.push('/')
       }
       this.loading = false
     },
     async logout () {
-      await this.$store.dispatch('students/logout')
+      await this.$store.dispatch('employees/logout')
       this.$router.push('/')
     }
   }

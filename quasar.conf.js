@@ -47,12 +47,12 @@ module.exports = function (/* ctx */) {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       env: {
         API_URL: 'http://localhost:3000/',
-        // API_URL: 'https://apps.uerm.edu.ph:3443/',
+        // API_URL: 'https://api.uerm.edu.ph/',
+        LOCAL_API_URL: 'http://api.uerm.edu.ph/',
         SECONDARY_API_URL: 'https://apps.uerm.edu.ph:3443/',
-        API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
-        LOCAL_API_URL: 'http://localhost:3000/',
-        LOCAL_PC_API_URL: 'http://192.168.43.64:3000/',
-        LOCAL_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
+        SECONDARY_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
+        LOCAL_SECONDARY_API_URL: 'http://10.107.5.253:3000/',
+        LOCAL_SECONDARY_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',
         API_USERNAME: 'academic_records',
         API_PASSWORD: '12345'
       },
@@ -123,9 +123,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `UERM Bingo`,
-        short_name: `UERM Bingo`,
-        description: `A UERM Bingo Application`,
+        name: `UERM Academic Records - Registrar`,
+        short_name: `UERM Academic Records - Registrar`,
+        description: `A UERM Academe Application`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

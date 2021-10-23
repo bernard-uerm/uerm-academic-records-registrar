@@ -1,3 +1,7 @@
+export function employeeInformation (state) {
+  return state.employeeInformation
+}
+
 export function otpStatus (state) {
   return state.otpStatus
 }

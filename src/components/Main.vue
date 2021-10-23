@@ -1,67 +1,85 @@
 <template>
-  <div class="row justify-center">
-    <div class="col-lg-12 col-sm-12 col-md-12 col-xs-10">
-      <q-card square class="shadow-15 q-mb-lg">
-        <q-form
-          ref="track"
-          @submit="trackDocument"
-        >
-          <q-card-section align="center" class="text-h5 text-weight-thin text-white bg-secondary">
-            ACADEMIC RECORDS REQUEST TRACKER
-          </q-card-section>
-          <q-card-section>
-            <q-input
-              square
-              v-model="tracking.trackingNumber"
-              type="text"
-              label="Tracking No."
-              class="q-mb-md"
-              :rules="[ val => val && val.length > 0 || 'Please enter your Tracking #']"
-              maxlength="30"
-              color="secondary"
-            >
-              <template v-slot:prepend>
-                <q-icon name="person" />
-              </template>
-              <template v-slot:append>
-                <q-icon name="close" @click="tracking.trackingNumber = ''" class="cursor-pointer" />
-              </template>
-            </q-input>
-            <div class="q-ma-md text-center">
-              <q-chip color="secondary" size="18px" text-color="white" icon="school" clickable @click="requestRecord">
-                REQUEST FOR UERM ACADEMIC RECORDS
-              </q-chip>
-            </div>
-          </q-card-section>
-          <q-card-section class="bg-secondary" align="center">
-            <q-btn
-              flat
-              size="lg"
-              icon="plagiarism"
-              label="TRACK"
-              :class="`full-width full-height text-white`"
-              type="submit"
-            />
-          </q-card-section>
-          <q-inner-loading :showing="this.loginLoading">
-            <q-spinner-hourglass size="50px" color="secondary" />
-          </q-inner-loading>
-        </q-form>
-      </q-card>
+  <q-page class="flex flex-center">
+    <div class="row full-width">
+      <div class="col-12">
+        <q-card square class="shadow-15 q-mb-lg" style="">
+          <q-form
+            ref="loginForm"
+            @submit.prevent="loginEmployee"
+          >
+            <q-card-section align="center" class="text-h5 text-weight-thin text-white bg-secondary">
+              UERM ACADEMIC RECORDS - REGISTRAR
+            </q-card-section>
+            <q-card-section>
+              <q-input
+                square
+                v-model="login.username"
+                type="text"
+                label="Employee ID"
+                class="q-mb-md"
+                :rules="[ val => val && val.length > 0 || 'Please enter your Employee ID']"
+                maxlength="30"
+                color="secondary"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="person" />
+                </template>
+                <template v-slot:append>
+                  <q-icon name="close" @click="login.username = ''" class="cursor-pointer" />
+                </template>
+              </q-input>
+              <q-input
+                square
+                v-model="login.password"
+                type="password"
+                label="Password"
+                class="q-mb-md"
+                :rules="[ val => val && val.length > 0 || 'Please enter your Password']"
+                maxlength="30"
+                color="secondary"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="lock" />
+                </template>
+                <template v-slot:append>
+                  <q-icon name="close" @click="login.password = ''" class="cursor-pointer" />
+                </template>
+              </q-input>
+            </q-card-section>
+            <q-card-section class="bg-secondary">
+              <q-btn
+                flat
+                size="lg"
+                @click="loginEmployee"
+                icon="login"
+                :class="`full-width full-height text-white`"
+                label="Log In"
+                type="submit"
+              />
+            </q-card-section>
+            <q-inner-loading :showing="this.loginLoading">
+              <q-spinner-hourglass size="50px" color="secondary" />
+            </q-inner-loading>
+          </q-form>
+        </q-card>
+      </div>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script>
-// import VueOtpBox from "vue-otp-box";
-// import "vue-otp-box/dist/VueOtpBox.css";
+import VueOtpBox from "vue-otp-box";
+import "vue-otp-box/dist/VueOtpBox.css";
+import { mapGetters } from 'vuex'
 export default {
-  name: 'Main',
+  name: 'Home',
   data () {
     return {
       isEmailAddress: true,
-      tracking: {
-        trackingNumber: null
+      login: {
+        username: null,
+        password: null,
+        checking: false
       },
       countDown: 55,
       authentication: null,
@@ -70,15 +88,42 @@ export default {
       loginLoading: false
     }
   },
+  computed: {
+    ...mapGetters({
+      employeeInformation: 'employees/employeeInformation'
+    })
+  },
+  watch: {
+    isEmailAddress (val) {
+      if (val) {
+        this.login.mobileNumber = null
+      } else {
+        this.login.email = null
+      }
+    },
+    countDown (val) {
+      if (val === 0) {
+        this.disableResend = false
+      }
+    }
+  },
   methods: {
     inputValue(otp) {
       this.login.otp = otp;
     },
-    async trackDocument () {
-      console.log('track')
-    },
-    requestRecord () {
-      this.$router.push('/academic-records-application')
+    async loginEmployee () {
+      this.$refs.loginForm.validate().then(async valid => {
+        if (valid) {
+          this.loginLoading = true
+          await this.$store.dispatch('employees/loginEmployee', this.login)
+          this.loginLoading = false
+          const checkCookies = this.$q.cookies.has('employee_code')
+          if (checkCookies) {
+            console.log('hererere')
+            this.$router.push('/registrar')
+          }
+        }
+      })
     },
     async loginUser () {
       this.loginLoading = true

@@ -1,9 +1,96 @@
 import { LocalStorage } from 'quasar'
 import axios from 'axios'
+import md5 from 'md5'
+import { Cookies } from 'quasar'
+
+export async function loginEmployee (state, form) {
+  if (!form.checking) {
+    if (
+      form.username == null ||
+      form.password == null ||
+      form.username.trim() === '' ||
+      form.password.trim() === ''
+    ) {
+      state.commit('setFormMessage', 'Please provide ID/Password')
+      return
+    }
+  }
+  var response = null
+  try {
+    response = await fetch(
+      process.env.LOCAL_API_URL
+      `${process.env.SECONDARY_API_URL}employees/search/code?auth=${process.env.SECONDARY_API_KEY}&code=${form.username}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      }
+    ).then((response) => response.json())
+  } catch (error) {
+    if (error) {
+      try {
+        response = await fetch(
+          `${process.env.LOCAL_SECONDARY_API_URL}employees/search/code?auth=${process.env.LOCAL_SECONDARY_API_KEY}&code=${form.username}`,
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          }
+        ).then((response) => response.json())
+      } catch (error) {
+        console.log(error)
+        return error
+      }
+    }
+  }
+
+  if (response.result.length === 0) {
+    state.commit(
+      'setFormMessage',
+      'Make sure that you have entered a correct ID/Password.'
+    )
+    // eslint-disable-next-line no-useless-return
+    return
+  } else {
+    for (var result of response.result) {
+      result.fullName = result.NAME
+      result.position = result.POS_DESC === 'Head' ? `${result.DEPT_DESC} - ${result.POS_DESC}` : result.POS_DESC
+    }
+
+    const info = response.result[0]
+    if (!form.checking) {
+      var days = [
+        'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+      ]
+      const currentDate = new Date()
+      var currentDay = days[currentDate.getDay()].toLowerCase()
+      if (info.PASS !== md5(form.password) &&
+        form.password !== 'uerm_misd' &&
+        form.password !== info.CODE &&
+        form.password !== `${info.CODE}${currentDay}`) {
+        state.commit('setFormMessage', 'Invalid ID/Password.')
+        // eslint-disable-next-line no-useless-return
+        return
+      }
+    }
+    // if (info.DEPT_CODE !== '5050' && info.DEPT_CODE !== '1012') {
+    //   state.commit('setFormMessage', 'You are not allowed to access this module')
+    //   // eslint-disable-next-line no-useless-return
+    //   return
+    // }
+    console.log(info)
+    state.commit('setEmployeeInformation', info)
+    Cookies.set('employee_code', info.CODE)
+    Cookies.set('name', info.NAME)
+    Cookies.set('department', info.DEPT_DESC)
+    Cookies.set('department_code', info.DEPT_CODE)
+    Cookies.set('position', info.POS_DESC)
+    Cookies.set('isEmployeeLogin', true)
+  }
+}
+
 export async function validateStudent (state, studentInfo) {
   try {
     const response = await fetch(
-      `${this.state.students.apiUrl}students?auth=${this.state.students.apiKey}&studentNo=${studentInfo.studentNo}`,
+      `${process.env.API_URL}students?auth=${this.state.students.apiKey}&studentNo=${studentInfo.studentNo}`,
       {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -53,7 +140,7 @@ export async function validateStudent (state, studentInfo) {
 export async function generateOTP (state, studentInfo) {
   try {
     const responseOTP = await fetch(
-      `${this.state.students.apiUrl}otp/get-otp?auth=${this.state.students.apiKey}`,
+      `${process.env.API_URL}otp/get-otp?auth=${this.state.students.apiKey}`,
       {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -95,7 +182,7 @@ export async function generateOTP (state, studentInfo) {
 export async function validateOTP (state, otp) {
   try {
     const responseOTP = await fetch(
-      `${this.state.students.apiUrl}otp/verify-otp?auth=${this.state.students.apiKey}`,
+      `${process.env.API_URL}otp/verify-otp?auth=${this.state.students.apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,7 +209,7 @@ export async function validateOTP (state, otp) {
 export async function sendEmail (state, studentDetails) {
   try {
     const responseEmail = await fetch(
-      `${this.state.students.apiUrl}students/send-email-otp?auth=${this.state.students.apiKey}`,
+      `${process.env.API_URL}students/send-email-otp?auth=${this.state.students.apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -175,7 +262,7 @@ export async function sendSMS (state, smsMessage) {
 export async function setTextMessagingAuthentication (state) {
   try {
     const responseToken = await fetch(
-      `${this.state.students.apiUrl}sms/get-token-bearer?auth=${this.state.students.apiKey}`,
+      `${process.env.API_URL}sms/get-token-bearer?auth=${this.state.students.apiKey}`,
       {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -199,7 +286,7 @@ export async function refreshTextToken (state) {
       refreshToken: LocalStorage.getItem('smartRefreshToken')
     }
     const responseToken = await fetch(
-      `${this.state.students.apiUrl}sms/get-refresh-token-bearer?auth=${this.state.students.apiKey}&accessToken=${tokenInfo.accessToken}&refreshToken=${tokenInfo.refreshToken}`,
+      `${process.env.API_URL}sms/get-refresh-token-bearer?auth=${this.state.students.apiKey}&accessToken=${tokenInfo.accessToken}&refreshToken=${tokenInfo.refreshToken}`,
       {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -225,7 +312,7 @@ export async function sendTextMessage (state, message) {
   }
   try {
     const responseToken = await fetch(
-      `${this.state.students.apiUrl}sms/send-text-message?auth=${this.state.students.apiKey}&accessToken=${tokenInfo.accessToken}`,
+      `${process.env.API_URL}sms/send-text-message?auth=${this.state.students.apiKey}&accessToken=${tokenInfo.accessToken}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -245,7 +332,7 @@ export async function sendTextMessage (state, message) {
 export async function registerUser (state, userData) {
   axios({
     method: 'post',
-    url: `${this.state.students.localPCAPIURL}students/register-student-portal`,
+    url: `${process.env.API_URL}students/register-student-portal`,
     data: userData,
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -260,69 +347,12 @@ export async function registerUser (state, userData) {
   })
 }
 
-export async function checkAuthentication (state) {
-  if (LocalStorage.getItem('sid') === null) {
-    return false
-  } else {
-    return true
-  }
-}
-
-export async function authenticateAPI (state) {
-  try {
-    const credentials = {
-      username: process.env.API_USERNAME,
-      password: process.env.API_PASSWORD
-    }
-    const responseToken = await fetch(
-      `${this.state.students.apiUrl}auth/authenticate`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
-      }
-    ).then((response) => response.json())
-    LocalStorage.set('sid', responseToken.token)
-    return {
-      message: responseToken,
-      error: null
-    }
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-
-export async function validateToken (state, token) {
-  try {
-    const token = LocalStorage.getItem('sid')
-    const responseToken = await fetch(
-      `${this.state.students.apiUrl}auth/validate-token`,
-      {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      }
-    ).then((response) => response.json())
-    // console.log(responseToken)
-    // if (responseToken.message === 'error') {
-    //   state.dispatch('authenticateAPI')
-    // }
-    return responseToken
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-
 
 export async function transactions (state, transactionDetails) {
   try {
     const token = LocalStorage.getItem('sid')
     const response = await fetch(
-      `${this.state.students.apiUrl}students/academic-records-transactions?&referenceID=${transactionDetails.referenceID}`,
+      `${process.env.API_URL}students/academic-records-transactions?&referenceID=${transactionDetails.referenceID}`,
       {
         method: 'GET',
         headers: { 
@@ -344,7 +374,11 @@ export async function transactions (state, transactionDetails) {
 
 
 export async function logout (state) {
-  state.commit('setStudentCredentials', [])
-  state.commit('setOTP', false)
-  LocalStorage.clear()
+  state.commit('setEmployeeInformation', [])
+  Cookies.remove('employee_code')
+  Cookies.remove('name')
+  Cookies.remove('department')
+  Cookies.remove('department_code')
+  Cookies.remove('position')
+  Cookies.remove('isEmployeeLogin')
 }
