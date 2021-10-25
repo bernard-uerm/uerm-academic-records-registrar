@@ -36,7 +36,7 @@
             {{ props.row.fullName }}
           </q-td>
           <q-td key="RequestingDocument" :props="props">
-            {{ props.row.RequestingDocument }} - ({{ props.row.DocumentCopies}} Copies)
+            {{ props.row.RequestingDocument }} - ({{ props.row.DocumentCopies}} {{ props.row.DocumentCopies === '1' ? 'Copy' : 'Copies' }})
           </q-td>
           <q-td key="ContactNumber" :props="props">
             {{ props.row.ContactNumber }}
@@ -83,7 +83,16 @@
         </q-tr>
       </template>
     </q-table>
-
+    <q-dialog v-model="requestDialog">
+      <q-card>
+        <q-card-section align="center">
+          REQUEST DETAILS
+        </q-card-section>
+        <q-card-section>
+          dsfsfsdfsdf
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -113,14 +122,28 @@ export default {
         { name: 'DateTimeCreated', label: 'D/T Requested', field: 'DateTimeCreated', align: 'left', sortable: true },
         { name: 'Status', label: 'Status', field: 'Status', align: 'center', sortable: true }
       ],
-      
+      requestDialog: false,
+      requestDetails: {
+
+      }
     }
   },
   watch: {
     selected (val) {
       if (val.length > 0) {
-
+        console.log(val)
+        this.requestDialog = true
       }
+    },
+    requestDialog (val) {
+      if (!val) {
+        this.setInitValues()
+      }
+    }
+  },
+  methods: {
+    setInitValues () {
+      this.selected = []
     }
   }
 }

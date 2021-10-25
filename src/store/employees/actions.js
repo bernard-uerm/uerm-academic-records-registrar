@@ -18,7 +18,6 @@ export async function loginEmployee (state, form) {
   var response = null
   try {
     response = await fetch(
-      process.env.LOCAL_API_URL
       `${process.env.SECONDARY_API_URL}employees/search/code?auth=${process.env.SECONDARY_API_KEY}&code=${form.username}`,
       {
         method: 'GET',

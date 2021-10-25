@@ -46,8 +46,8 @@ module.exports = function (/* ctx */) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       env: {
-        API_URL: 'http://localhost:3000/',
-        // API_URL: 'https://api.uerm.edu.ph/',
+        // API_URL: 'http://localhost:3000/',
+        API_URL: 'https://api.uerm.edu.ph/',
         LOCAL_API_URL: 'http://api.uerm.edu.ph/',
         SECONDARY_API_URL: 'https://apps.uerm.edu.ph:3443/',
         SECONDARY_API_KEY: 'FJO2qvHeSW4RIPYx33EF1hXBvdZQ2aI3',

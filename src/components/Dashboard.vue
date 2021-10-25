@@ -1,67 +1,14 @@
 <template>
   <div class="row justify-center q-pa-md">
     <div class="col-lg-12 col-md-12 col-xs-12">
-      <q-card>
+      <q-card style="background:linear-gradient(to right, #26A69A , #1976D2)">
         <q-card-section>
           <q-card>
             <q-card-section align="center" class="text-weight-thin text-h5 text-white bg-primary">
               UERM ACADEMIC RECORDS - REGISTRAR
             </q-card-section>
             <q-card-section>
-              <div class="row q-col-gutter-md">
-                <div class="col-lg-3 col-sm-12 col-xs-12">
-                  <q-card class="text-white bg-yellow text-grey-8">
-                    <q-card-section>
-                      <div class="row justify-center q-col-gutter-lg">
-                        <q-icon name="rule_folder" size="60px"></q-icon>
-                        <span class="flex flex-center text-h5">12345</span>
-                      </div>
-                    </q-card-section>
-                    <q-card-section class="q-mt-0 text-h5 bg-yellow-7" align="center">
-                      UNVERIFIED
-                    </q-card-section>
-                  </q-card>
-                </div>
-                <div class="col-lg-3 col-sm-12 col-xs-12">
-                  <q-card class="text-white bg-positive">
-                    <q-card-section>
-                      <div class="row justify-center q-col-gutter-lg">
-                        <q-icon name="drive_file_move" size="60px"></q-icon>
-                        <span class="flex flex-center text-h5">12345</span>
-                      </div>
-                    </q-card-section>
-                    <q-card-section class="q-mt-0 text-h5 bg-green-7" align="center">
-                      VERIFIED
-                    </q-card-section>
-                  </q-card>
-                </div>
-                <div class="col-lg-3 col-sm-12  col-xs-12">
-                  <q-card class="text-white bg-orange">
-                    <q-card-section>
-                      <div class="row justify-center q-col-gutter-lg">
-                        <q-icon name="local_shipping" size="60px"></q-icon>
-                        <span class="flex flex-center text-h5">12345</span>
-                      </div>
-                    </q-card-section>
-                    <q-card-section class="q-mt-0 text-h5 bg-orange-7" align="center">
-                      IN-TRANSIT
-                    </q-card-section>
-                  </q-card>
-                </div>
-                <div class="col-lg-3 col-sm-12  col-xs-12">
-                  <q-card class="text-white bg-blue">
-                    <q-card-section>
-                      <div class="row justify-center q-col-gutter-lg">
-                        <q-icon name="local_post_office" size="60px"></q-icon>
-                        <span class="flex flex-center text-h5">12345</span>
-                      </div>
-                    </q-card-section>
-                    <q-card-section class="q-mt-0 text-h5 bg-blue-7" align="center">
-                      DELIVERED
-                    </q-card-section>
-                  </q-card>
-                </div>
-              </div>
+              <tracker :requestData="this.academicRequestRecords"></tracker>
             </q-card-section>
           </q-card>
         </q-card-section>
@@ -86,7 +33,7 @@
                   ACADEMIC RECORDS REQUEST - {{ this.tab.toUpperCase() }} FOR THE LAST 30 DAYS
                 </q-card-section>
                 <q-card-section>
-                  <main-table :requestData="this.unverifiedRequests" :loading="this.loading"></main-table>
+                  <MainTable :requestData="this.unverifiedRequests" :loading="this.loading"></MainTable>
                 </q-card-section>
               </q-tab-panel>
               <q-tab-panel name="verified">
@@ -94,7 +41,7 @@
                   ACADEMIC RECORDS REQUEST - {{ this.tab.toUpperCase() }} FOR THE LAST 30 DAYS
                 </q-card-section>
                 <q-card-section>
-                  <main-table :requestData="this.verifiedRequests" :loading="this.loading"></main-table>
+                  <MainTable :requestData="this.verifiedRequests" :loading="this.loading"></MainTable>
                 </q-card-section>
               </q-tab-panel>
             </q-tab-panels>
@@ -107,9 +54,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import mainTable from './others/mainTable.vue'
+import MainTable from './others/Table.vue'
+import Tracker from './others/Tracker.vue'
 export default {
-  components: { mainTable },
+  components: { MainTable, Tracker },
   name: 'Dashboard',
   data () {
     return {

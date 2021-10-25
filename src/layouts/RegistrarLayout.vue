@@ -63,10 +63,16 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
   {
-    title: 'Dashboard',
-    caption: 'Your Dashboard',
-    icon: 'fa fa-chart-area',
-    link: 'https://quasar.dev'
+    title: 'DASHBOARD',
+    caption: '',
+    icon: 'fa fa-tachometer-alt',
+    link: '/registrar'
+  },
+  {
+    title: 'ANALYTICS',
+    caption: '',
+    icon: 'fa fa-chart-bar',
+    link: '/analytics'
   },
   // {
   //   title: 'Clearance',
@@ -106,17 +112,17 @@ export default {
     async checkAuthentication () {
       this.loading = true
       console.log(this.$q.cookies.has('isEmployeeLogin'))
-      if (this.$q.cookies.has('isEmployeeLogin')) {
+      if (!this.$q.cookies.has('isEmployeeLogin')) {
+        this.$router.push('/')
+      } else {
         let employeeID = this.$q.cookies.get('employee_code')
-        const studentInfo = {
+        const info = {
           username: employeeID,
           checking: true
         }
-        const validatedStudent = await this.$store.dispatch('employees/loginEmployee', studentInfo)
+        const validatedStudent = await this.$store.dispatch('employees/loginEmployee', info)
         this.loginInfo.name = this.employeeInformation.fullName
         this.loginInfo.position = this.employeeInformation.position
-      } else {
-        this.$router.push('/')
       }
       this.loading = false
     },

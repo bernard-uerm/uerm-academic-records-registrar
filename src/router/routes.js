@@ -14,7 +14,14 @@ const routes = [
       { path: '', component: () => import('pages/Registrar.vue') }
     ]
   },
-
+  {
+    path: '/analytics',
+    component: () => import('layouts/RegistrarLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Analytics.vue') },
+      { path: '/analytics/analytics-detailed/:id', component: () => import('components/analytics/Detailed.vue') }
+    ]
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
